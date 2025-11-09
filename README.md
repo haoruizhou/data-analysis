@@ -46,3 +46,12 @@ You can run the automated report generation as follows:
 ```bash
 papermill daq_pdf_report.ipynb output/Run_Report_$(date +%Y-%m-%d).ipynb -p REPORT_DATE $(date +%Y-%m-%d)
 jupyter nbconvert --to pdf output/Run_Report_$(date +%Y-%m-%d).ipynb
+```
+---
+
+## Example Output
+<div style="display: flex; justify-content: center; gap: 1%; align-items: center;">
+  <img src="https://github.com/user-attachments/assets/929940a4-a955-4c70-a441-2756a25a9216" alt="Left plot" width="48%">
+  <img src="https://github.com/user-attachments/assets/cbdc520e-f255-49d8-811c-2e81cef55cb0" alt="Right plot" width="48%">
+</div>
+
