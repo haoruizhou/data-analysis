@@ -1,0 +1,41 @@
+name: WFR Daily Report
+
+on:
+  schedule:
+    - cron: "30 11 * * *"  # Runs daily at 11:30 AM UTC
+  workflow_dispatch:        # Allows manual trigger from GitHub UI
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    env:
+      INFLUX_SERVER: ${{ secrets.INFLUX_SERVER }}
+      INFLUX_TOKEN: ${{ secrets.INFLUX_TOKEN }}
+      PUBLIC_MODE: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install papermill jupyter matplotlib pandas influxdb3-python tabulate
+
+      - name: Run notebook via Papermill
+        run: |
+          mkdir -p output
+          papermill scheduled-report.ipynb output/output_notebook.ipynb
+
+      - name: Upload generated PDF (retained 7 days)
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-pdf-report
+          path: output/*.pdf
+          retention-days: 7
